@@ -43,8 +43,10 @@ export default function UploadPage() {
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log("handleSubmit called in Creator Upload");
     e.preventDefault();
     if (!file || !user) return;
+    console.log("User:", user);
     setError("");
     const req = ["title","description","category","placeName","district"];
     for (const k of req) {
