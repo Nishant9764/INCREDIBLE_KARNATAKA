@@ -326,12 +326,13 @@ import {
   MapPin, Search, Bell, ChevronRight, Play,
   SlidersHorizontal
 } from "lucide-react";
-import { IVideo } from "@/types";
+import { IVideo, IPlace } from "@/types";
 import { CATEGORIES } from "@/constants";
 import { useAuth } from "@/features/auth/AuthContext";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { RadiusSlider } from "@/features/home/RadiusSlider";
 import { GemCard } from "@/features/home/GemCard";
+import { PlaceCard } from "@/components/shared/PlaceCard";
 import { TrendingItem } from "@/features/home/TrendingItem";
 import { StoryCard } from "@/features/home/StoryCard";
 import { SectionHeader } from "@/features/home/SectionHeader";
@@ -391,6 +392,8 @@ function HomePage() {
   const [sliderOpen, setSliderOpen] = useState(false);
   const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null);
   const [locationLabel, setLocationLabel] = useState("Karnataka");
+  const [places, setPlaces] = useState<IPlace[]>([]);
+  const [placesLoading, setPlacesLoading] = useState(false);
 
   useEffect(() => {
     if (!navigator.geolocation) return;
@@ -437,6 +440,18 @@ function HomePage() {
   }, []);
 
   useEffect(() => { fetchVideos(); }, [fetchVideos]);
+
+  useEffect(() => {
+    if (userLocation) {
+      setPlacesLoading(true);
+      fetch(`/api/places?lat=${userLocation.lat}&lng=${userLocation.lon}&radius=50&limit=10`)
+        .then(r => r.json())
+        .then(d => {
+          if (d.success) setPlaces(d.data.places);
+        })
+        .finally(() => setPlacesLoading(false));
+    }
+  }, [userLocation]);
 
   const firstName = user?.fullName.split(" ")[0] || "Explorer";
 
@@ -520,14 +535,35 @@ function HomePage() {
         </div>
       </div>
 
+      {/* ── NEARBY PLACES ── */}
+      {userLocation && (
+        <section className="mt-2 mb-6">
+          <SectionHeader
+            title="Nearby Places"
+            sub="Explore locations around you"
+            onSeeAll={() => router.push("/map")}
+          />
+          <div className="flex gap-3 px-4 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+            {placesLoading
+              ? [1,2,3].map(i => <div key={i} className="flex-shrink-0 w-44 h-56 skeleton" />)
+              : places.length === 0
+              ? <p className="text-sm text-[#9ca3af] px-2">No places found nearby. Try expanding radius on the map.</p>
+              : places.map(p => (
+                  <PlaceCard key={p._id} place={p} />
+                ))
+            }
+          </div>
+        </section>
+      )}
+
       {/* ── HIDDEN GEMS ── */}
-      <section className="mt-2 mb-6">
+      <section className="mb-6">
         <SectionHeader
           title={radius < 300 ? "Hidden gems near you" : "Hidden gems"}
           sub={radius < 300 ? `Within ${radius} km` : "Across Karnataka"}
           onSeeAll={() => router.push("/explore")}
         />
-        <div className="flex gap-3 px-4 overflow-x-auto pb-1">
+        <div className="flex gap-3 px-4 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
           {loading
             ? [1,2,3,4].map(i => <div key={i} className="flex-shrink-0 w-36 h-52 skeleton" />)
             : videos.slice(0, 8).map(v => (

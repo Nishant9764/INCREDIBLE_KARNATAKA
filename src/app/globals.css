@@ -113,28 +113,28 @@ input[type=range]::-moz-range-thumb {
 }
 
 */
-
+/*
 @import "tailwindcss";
 
 :root {
-  /* Earthy Teal Primary */
+  /* Earthy Teal Primary *
   --brand: #14b8a6;
   --brand-mid: #2dd4bf;
   --brand-glow: rgba(20, 184, 166, 0.35);
   
-  /* Charcoal & Cool Gray Backgrounds */
+  /* Charcoal & Cool Gray Backgrounds *
   --bg-app: #111827;
   --bg-card: #1f2937;
   --bg-surface: #374151;
   --border: #374151;
   --border-subtle: #1f2937;
   
-  /* Text */
+  /* Text *
   --text-primary: #f9fafb;
   --text-secondary: #9ca3af;
   --text-muted: #6b7280;
   
-  /* Accents */
+  /* Accents *
   --emerald: #10b981;
   --amber: #f59e0b;
   --rose: #f43f5e;
@@ -147,7 +147,7 @@ input[type=range]::-moz-range-thumb {
 
 html, body {
   margin: 0; padding: 0;
-  background: #0f172a; /* Slightly darker slate for the very back */
+  background: #0f172a; /* Slightly darker slate for the very back *
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -165,11 +165,11 @@ html, body {
   overflow-x: hidden;
 }
 
-/* Scrollbars hidden */
+/* Scrollbars hidden *
 * { scrollbar-width: none; -ms-overflow-style: none; }
 *::-webkit-scrollbar { display: none; }
 
-/* Feed snap */
+/* Feed snap *
 .feed-snap { scroll-snap-type: y mandatory; overflow-y: scroll; height: 100dvh; }
 .feed-snap-item { scroll-snap-align: start; scroll-snap-stop: always; height: 100dvh; }
 
@@ -178,7 +178,7 @@ video { object-fit: cover; }
 button, a { -webkit-tap-highlight-color: transparent; cursor: pointer; }
 input, textarea, select { outline: none; font-family: inherit; }
 
-/* Skeleton - Updated to Cool Grays */
+/* Skeleton - Updated to Cool Grays *
 @keyframes shimmer {
   0% { background-position: -400% 0; }
   100% { background-position: 400% 0; }
@@ -190,26 +190,26 @@ input, textarea, select { outline: none; font-family: inherit; }
   border-radius: 12px;
 }
 
-/* Glass */
+/* Glass *
 .glass { background: rgba(255,255,255,0.06); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
 .glass-dark { background: rgba(17,24,39,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
 
-/* Gradient text - Updated to Teal */
+/* Gradient text - Updated to Teal *
 .gradient-text { background: linear-gradient(135deg, #2dd4bf, #14b8a6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
-/* Fade in */
+/* Fade in *
 @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
 .fade-up { animation: fadeUp 0.35s ease forwards; }
 
-/* Slide in from bottom */
+/* Slide in from bottom *
 @keyframes slideUp { from { transform:translateY(100%); opacity:0; } to { transform:translateY(0); opacity:1; } }
 .slide-up { animation: slideUp 0.28s cubic-bezier(0.32,0.72,0,1) forwards; }
 
-/* Pulse dot */
+/* Pulse dot *
 @keyframes pulseDot { 0%,100% { transform:scale(1); opacity:1; } 50% { transform:scale(1.6); opacity:0.4; } }
 .pulse-dot { animation: pulseDot 2s ease-in-out infinite; }
 
-/* Range input custom */
+/* Range input custom *
 input[type=range] {
   -webkit-appearance: none;
   appearance: none;
@@ -233,4 +233,76 @@ input[type=range]::-moz-range-thumb {
   background: var(--brand);
   cursor: pointer;
   border: 3px solid white;
+}
+
+*/
+
+@import "tailwindcss";
+
+:root {
+  /* Brand / Accent (neutral grayscale) */
+  --brand: #000000;              /* pure black */
+  --brand-mid: #333333;          /* dark gray */
+  --brand-glow: rgba(0,0,0,0.25);
+
+  /* Backgrounds */
+  --bg-app: #0a0a0a;             /* near black */
+  --bg-card: #1a1a1a;            /* dark gray card */
+  --bg-surface: #2a2a2a;         /* lighter surface */
+  --border: #3a3a3a;             /* subtle border */
+  --border-subtle: #1a1a1a;
+
+  /* Text */
+  --text-primary: #ffffff;       /* pure white */
+  --text-secondary: #cccccc;     /* light gray */
+  --text-muted: #888888;         /* mid gray */
+
+  /* Accents (neutralized to grayscale) */
+  --emerald: #444444;
+  --amber: #666666;
+  --rose: #999999;
+  --blue: #555555;
+
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+html, body {
+  margin: 0; padding: 0;
+  background: #000000; /* pure black background */
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color-scheme: dark;
+}
+
+/* Skeleton shimmer updated to grayscale */
+.skeleton {
+  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+  background-size: 400% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+  border-radius: 12px;
+}
+
+/* Glass effect in grayscale */
+.glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+.glass-dark { background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+
+/* Gradient text simplified to black → white */
+.gradient-text { 
+  background: linear-gradient(135deg, #ffffff, #000000); 
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent; 
+  background-clip: text; 
+}
+
+/* Map Animations */
+@keyframes slideUpSheet {
+  from { transform: translateY(100%); opacity: 0.5; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes userPulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(3); opacity: 0; }
 }

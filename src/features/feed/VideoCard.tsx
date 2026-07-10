@@ -205,10 +205,20 @@ export function VideoCard({ video, isActive, userLocation, scrollIndex = 0, tota
             <Plus className="w-[22px] h-[22px] text-white" />
           </RailBtn>
 
-          {/* View place */}
+          {/* Open on Map */}
           <RailBtn
-            onClick={e => { e.stopPropagation(); router.push(`/place/${video._id}`); }}
-            label="Place"
+            onClick={e => {
+              e.stopPropagation();
+              const pId = typeof video.placeId === "object" ? video.placeId._id : video.placeId;
+              if (pId) {
+                router.push(`/map?placeId=${pId}`);
+              } else if (video.latitude && video.longitude) {
+                router.push(`/map?lat=${video.latitude}&lng=${video.longitude}`);
+              } else {
+                router.push(`/map`);
+              }
+            }}
+            label="Map"
           >
             <MapPin className="w-[22px] h-[22px] text-white" />
           </RailBtn>
@@ -322,11 +332,21 @@ export function VideoCard({ video, isActive, userLocation, scrollIndex = 0, tota
               Add to trip
             </button>
             <button
-              onClick={e => { e.stopPropagation(); router.push(`/place/${video._id}`); }}
+              onClick={e => {
+                e.stopPropagation();
+                const pId = typeof video.placeId === "object" ? video.placeId._id : video.placeId;
+                if (pId) {
+                  router.push(`/map?placeId=${pId}`);
+                } else if (video.latitude && video.longitude) {
+                  router.push(`/map?lat=${video.latitude}&lng=${video.longitude}`);
+                } else {
+                  router.push(`/map`);
+                }
+              }}
               className="flex-1 glass border border-white/15 text-white text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 active:scale-[0.97] transition-all"
             >
               <MapPin className="w-3.5 h-3.5" />
-              View place
+              View on Map
             </button>
           </div>
 

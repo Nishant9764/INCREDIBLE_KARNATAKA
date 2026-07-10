@@ -1,0 +1,36 @@
+import { NextRequest } from "next/server";
+import { connectDB } from "@/lib/db/connect";
+import { Place } from "@/models/Place";
+import { Video } from "@/models/Video";
+import "@/models/User";
+import { apiError, apiSuccess } from "@/lib/utils";
+
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    await connectDB();
+    const { id } = await params;
+
+    const place = await Place.findById(id).lean();
+    if (!place) return apiError("Place not found", 404);
+
+    // Fetch all approved videos linked to this place
+    const videos = await Video.find({
+      placeId: id,
+    })
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .lean();
+
+    console.log("Place ID:", id);
+    console.log("Videos found:", videos.length);
+    console.log(videos);
+
+    return apiSuccess({ place, videos });
+  } catch (err) {
+    console.error("[GET /api/places/:id]", err);
+    return apiError("Failed to load place", 500);
+  }
+}

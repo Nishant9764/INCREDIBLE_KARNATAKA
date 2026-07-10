@@ -2,7 +2,11 @@ export type Role = "EXPLORER" | "CREATOR" | "ADMIN";
 export type VideoStatus = "PENDING" | "APPROVED" | "REJECTED";
 export type Category =
   | "NATURE" | "HERITAGE" | "FOOD" | "TREKKING" | "WATERFALL"
-  | "CULTURE" | "HIDDEN_GEM" | "TEMPLE" | "BEACH" | "WILDLIFE";
+  | "CULTURE" | "HIDDEN_GEM" | "TEMPLE" | "BEACH" | "WILDLIFE" | "RESTAURANT";
+
+export type PlaceCategory =
+  | "RESTAURANT" | "CAFE" | "STREET FOOD" | "BAR"
+  | "NATURE" | "HERITAGE" | "TEMPLE" | "BEACH" | "WILDLIFE" | "OTHER";
 
 export interface IUser {
   _id: string;
@@ -18,19 +22,37 @@ export interface IUser {
   updatedAt: string;
 }
 
+export interface IPlace {
+  _id: string;
+  name: string;
+  district?: string;
+  city?: string;
+  state?: string;
+  category?: PlaceCategory;
+  description?: string;
+  location: {
+    type: "Point";
+    coordinates: [number, number]; // [longitude, latitude]
+  };
+  thumbnailUrl?: string;
+  /** Distance in km — injected by API when lat/lng provided */
+  distanceKm?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface IVideo {
   _id: string;
   title: string;
-  description: string;
+  description?: string;
   category: Category;
   tags: string[];
-  placeName: string;
-  district: string;
-  latitude?: number;
-  longitude?: number;
-  videoUrl: string;
+  /** Populated Place object or ObjectId string */
+  placeId: IPlace | string;
+  youtubeUrl?: string;
+  videoUrl?: string;
   thumbnailUrl?: string;
-  cloudinaryPublicId: string;
+  cloudinaryPublicId?: string;
   creatorId: IUser | string;
   status: VideoStatus;
   rejectionReason?: string;
@@ -39,9 +61,14 @@ export interface IVideo {
   commentsCount: number;
   sharesCount: number;
   savesCount: number;
-  distanceKm?: number; // injected client-side
   createdAt: string;
   updatedAt: string;
+  // ── Legacy flat fields kept for backward-compat (old video docs) ──
+  placeName?: string;
+  district?: string;
+  latitude?: number;
+  longitude?: number;
+  distanceKm?: number;
 }
 
 export interface IItinerary {
