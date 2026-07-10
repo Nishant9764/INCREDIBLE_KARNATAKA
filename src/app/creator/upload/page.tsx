@@ -90,10 +90,8 @@ export default function UploadPage() {
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log("handleSubmit called in Creator Upload");
     e.preventDefault();
     if (!file || !user) return;
-    console.log("User:", user);
     setError("");
     if (!form.title.trim()) {
       setError("Title is required");

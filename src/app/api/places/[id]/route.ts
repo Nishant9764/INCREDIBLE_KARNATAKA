@@ -23,11 +23,6 @@ export async function GET(
       .sort({ createdAt: -1 })
       .limit(20)
       .lean();
-
-    console.log("Place ID:", id);
-    console.log("Videos found:", videos.length);
-    console.log(videos);
-
     return apiSuccess({ place, videos });
   } catch (err) {
     console.error("[GET /api/places/:id]", err);

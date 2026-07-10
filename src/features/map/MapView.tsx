@@ -175,7 +175,6 @@ export const MapView = forwardRef<MapViewHandle, MapViewProps>(function MapView(
     });
 
     // Add/update markers
-    console.log(places);
     places.forEach((place) => {
       const [lng, lat] = place.location.coordinates;
       const isSelected = selectedRef.current === place._id;
@@ -219,7 +218,6 @@ export const MapView = forwardRef<MapViewHandle, MapViewProps>(function MapView(
     // Setup / update clustering
     const setupClusterer = async () => {
       try {
-        console.log("Markers:", markersRef.current.size);
     
         const { MarkerClusterer } =
           await import("@googlemaps/markerclusterer");
@@ -234,11 +232,8 @@ export const MapView = forwardRef<MapViewHandle, MapViewProps>(function MapView(
     
         const markers = Array.from(markersRef.current.values());
     
-        console.log(markers);
-    
         clustererRef.current.addMarkers(markers);
-    
-        console.log("Cluster loaded");
+
       } catch (e) {
         console.error("Cluster Error", e);
       }

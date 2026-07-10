@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/db/connect";
 import { Video } from "@/models/Video";
 import { Place } from "@/models/Place";
+import "@/models/User";
 import { getAuthUser } from "@/lib/auth/jwt";
 import { apiError, apiSuccess } from "@/lib/utils";
 import { FEED_PAGE_SIZE } from "@/constants";
@@ -31,14 +32,14 @@ export async function GET(req: NextRequest) {
 
     const [videos, total] = await Promise.all([
       Video.find(query)
-        .populate(
-          "placeId",
-          "name city district state category thumbnailUrl location"
-        )
-        .populate(
-          "creatorId",
-          "fullName profileImage district isVerified"
-        )
+        .populate({
+          path: "placeId",
+          select: "_id name city district state category thumbnailUrl location",
+        })
+        .populate({
+          path: "creatorId",
+          select: "fullName profileImage district isVerified",
+        })
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
@@ -66,8 +67,7 @@ export async function POST(req: NextRequest) {
 
     const user = await getAuthUser();
 
-    if (!user)
-      return apiError("Not authenticated", 401);
+    if (!user) return apiError("Not authenticated", 401);
 
     if (user.role !== "CREATOR")
       return apiError("Only creators can upload videos", 403);
@@ -90,20 +90,16 @@ export async function POST(req: NextRequest) {
       cloudinaryPublicId,
     } = body;
 
-    if (!title)
-      return apiError("Title is required", 400);
+    if (!title) return apiError("Title is required", 400);
 
-    if (!category)
-      return apiError("Category is required", 400);
+    if (!category) return apiError("Category is required", 400);
 
-    if (!videoUrl && !youtubeUrl)
-      return apiError("Video URL is required", 400);
+    if (!videoUrl && !youtubeUrl) return apiError("Video URL is required", 400);
 
     let finalPlaceId = placeId;
 
     if (!finalPlaceId) {
-      if (!newPlace)
-        return apiError("Place is required", 400);
+      if (!newPlace) return apiError("Place is required", 400);
 
       const existingPlace = await Place.findOne({
         name: newPlace.name.trim(),
@@ -126,10 +122,7 @@ export async function POST(req: NextRequest) {
 
           location: {
             type: "Point",
-            coordinates: [
-              newPlace.location.lng,
-              newPlace.location.lat,
-            ],
+            coordinates: [newPlace.location.lng, newPlace.location.lat],
           },
         });
 
@@ -163,11 +156,7 @@ export async function POST(req: NextRequest) {
       status: "PENDING",
     });
 
-    return apiSuccess(
-      { video },
-      "Video submitted successfully",
-      201
-    );
+    return apiSuccess({ video }, "Video submitted successfully", 201);
   } catch (err) {
     console.error(err);
     return apiError("Failed to upload video", 500);
